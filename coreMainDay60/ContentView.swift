@@ -9,23 +9,23 @@ import SwiftUI
 
 struct ContentView: View {
     @Environment(\.managedObjectContext) var moc
-    @FetchRequest(sortDescriptors: [],predicate: nil ) var students: FetchedResults<User>
+    @FetchRequest(sortDescriptors: [],predicate: nil ) var users: FetchedResults<User>
     
     
     var body: some View {
         NavigationView {
         VStack {
-            List(students){ student in
-                NavigationLink(destination: SingleView(username: student.name ?? "Unkown")) {
+            List(users){ user in
+                NavigationLink(destination: SingleView(username: user.name ?? "Unkown")) {
                 VStack {
                         
-                    Text(student.name ?? "Unkown ")
+                    Text(user.name ?? "Unkown ")
                     
-                    ForEach(student.friendsArray){ friend in
+                    ForEach(user.friendsArray){ friend in
                         Text("\(friend.wrappedName)")
                     }
               
-                    ForEach(student.tagsArray){ tag in
+                    ForEach(user.tagsArray){ tag in
                         Text("\(tag.wrappedName) Tags")
                     }
               
@@ -55,16 +55,16 @@ struct ContentView: View {
                                 
                                 for user in decodedResponse {
                                     
-                                    let student = User(context: moc)
-                                    student.name = user.name
-                                    student.id = user.id
+                                    let newUser = User(context: moc)
+                                    newUser.name = user.name
+                                    newUser.id = user.id
                                     var friendSet = Set<Friend>()
                                     
                                     for friend in user.friends {
-                                        let friend1 = Friend(context: moc)
-                                        friend1.id = UUID()
-                                        friend1.name = friend.name
-                                        friendSet.insert(friend1)
+                                        let newFriend = Friend(context: moc)
+                                        newFriend.id = UUID()
+                                        newFriend.name = friend.name
+                                        friendSet.insert(newFriend)
                                     }
                                  
                                     
@@ -76,8 +76,8 @@ struct ContentView: View {
                                     }
                                
                                     
-                                    student.addToTags(tagSet)
-                                    student.addToFriends(friendSet)
+                                    newUser.addToTags(tagSet)
+                                    newUser.addToFriends(friendSet)
                                     
 
                                     

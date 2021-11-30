@@ -8,25 +8,29 @@
 import SwiftUI
 
 struct SingleView: View {
-    @FetchRequest var students: FetchedResults<User>
+    @FetchRequest var users: FetchedResults<User>
   
     
     init(username:String) {
         print(username)
         // We are not assining not we are changing the whole data
-        _students = FetchRequest(sortDescriptors: [],predicate: NSPredicate(format: "name = %@", username) )
+        _users = FetchRequest(sortDescriptors: [],predicate: NSPredicate(format: "name = %@", username) )
     }
     
     var body: some View {
-        ForEach(students){ student in
+        ForEach(users){ user in
             VStack {
-                Text(student.name ?? "Unkown ")
+                Text(user.name ?? "Unkown ")
                 
-                ForEach(student.friendsArray){ friend in
-                    Text("\(friend.wrappedName)")
+                ForEach(user.friendsArray){ friend in
+                    
+                    NavigationLink(destination: SingleView(username: friend.wrappedName)){
+                        Text("\(friend.wrappedName)")
+                    }
+                    
                 }
           
-                ForEach(student.tagsArray){ tag in
+                ForEach(user.tagsArray){ tag in
                     Text("\(tag.wrappedName) Tags")
                 }
           
